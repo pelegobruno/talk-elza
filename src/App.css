@@ -1,0 +1,253 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #fff8f0;
+  color: #333;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  padding: 20px;
+}
+
+/* Navegação */
+nav {
+  background-color: #fff;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+nav a {
+  text-decoration: none;
+  margin: 0 15px; /* Aumenta o espaçamento para melhor legibilidade */
+  color: #8e4a49;
+  font-weight: bold;
+  transition: color 0.3s; /* Efeito de transição para hover */
+}
+
+nav a:hover {
+  color: #993730; /* Cor ao passar o mouse */
+}
+
+nav button {
+  background: none;
+  border: none;
+  color: #8e4a49;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s; /* Efeito de transição para hover */
+}
+
+nav button:hover {
+  color: #993730; /* Cor ao passar o mouse */
+}
+
+/* Cards de Receita */
+.receita-card {
+  background-color: #fffdf9;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+  transition: transform 0.2s, box-shadow 0.2s; /* Adiciona transição para sombra */
+}
+
+.receita-card:hover {
+  transform: scale(1.01);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra mais pronunciada ao passar o mouse */
+}
+
+.receita-card h3 {
+  color: #D2691E;
+  font-size: 4rem; /* Aumenta o tamanho da fonte */
+  margin-bottom: 0.5rem;
+  text-align: center; /* Centraliza o título */
+}
+
+.receita-card p {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  text-align: center; /* Centraliza o texto do parágrafo */
+}
+
+.receita-card img {
+  max-width: 100%;
+  height: auto; /* Mantém a proporção da imagem */
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+iframe {
+  display: block;
+  margin: 1rem auto;
+  border-radius: 8px;
+}
+
+/* Inputs e Botões */
+input,
+textarea {
+  width: 100%;
+  padding: 0.8rem;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fffdfb;
+  font-family: 'Georgia', serif;
+  font-size: 1rem;
+}
+
+button {
+  padding: 0.7rem 1.4rem;
+  background-color: #b3473f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Efeito de transição para hover */
+}
+
+button:hover {
+  background-color: #3a2424;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  nav {
+    font-size: 0.9rem; /* Ajusta o tamanho da fonte para telas pequenas */
+  }
+
+  .receita-card {
+    padding: 1rem;
+  }
+
+  .receita-card h3 {
+    font-size: 2.4rem; /* Ajuste do tamanho da fonte em telas pequenas */
+  }
+}
+
+.botoes-admin {
+  display: flex;
+  gap: 10px;
+}
+
+.botoes-admin button {
+  background-color: #b3473f;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Efeito de transição para hover */
+}
+
+.botoes-admin button:hover {
+  background-color: #993730;
+}
+
+/**** Estilo para a fonte Mainstay Inicio *****/
+/* Fonte Mainstay para h3 */
+@font-face {
+  font-family: 'Mainstay';
+  src: url('./assets/fonts/mainstay/Mainstay.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+h3 {
+  font-family: 'Mainstay', sans-serif;
+}
+
+/* Fonte Bombulate para h1 */
+@font-face {
+  font-family: 'Bombulate';
+  src: url('./assets/fonts/04b_30/04B_30__.TTF');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/*admin inicio*/
+  h1 {
+    font-family: 'Bombulate', sans-serif !important;
+    text-align: center;
+    font-size: 1.3rem;
+    color: #ff0084;
+    margin-bottom: 1rem;
+  }
+/**** Estilo para a fonte Mainstay Fim *****/
+
+.receita-card ul,
+.receita-card ol {
+  list-style-position: inside;
+  padding-left: 0;
+  text-align: justify;
+}
+
+/* Título "Receitas Cadastradas" */
+.titulo-admin {
+  text-align: center;
+  font-family: 'Mainstay', sans-serif;
+  font-size: 2.2rem;
+  margin-top: 2rem;
+  margin-bottom: 2.5rem;
+  color: #ff0084;
+}
+
+/* Container da receita (nome + botões) */
+.item-admin {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Nome da receita */
+.item-admin strong {
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+/* Botões de ação */
+.botoes-admin {
+  display: flex;
+  gap: 2px;
+}
+
+.botoes-admin button {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+/*admin fim*/
+
+/****util inicio***/
+.kitchen-utils {
+  padding: 2rem;
+  background-color: #fff8f0;
+  border-radius: 12px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.kitchen-utils section {
+  margin-bottom: 2rem;
+}
+
+.kitchen-utils h3 {
+  margin-bottom: 0.5rem;
+  color: #993730;
+}
+
+.button-group button {
+  margin-right: 5px;
+}
+/***util fim***/
+
