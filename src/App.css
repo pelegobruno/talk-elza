@@ -64,7 +64,7 @@ nav button:hover {
 
 .receita-card h3 {
   color: #D2691E;
-  font-size: 4rem; /* Aumenta o tamanho da fonte */
+  font-size: 3rem; /* Aumenta o tamanho da fonte */
   margin-bottom: 0.5rem;
   text-align: center; /* Centraliza o título */
 }
