@@ -12,58 +12,38 @@ export default defineConfig({
       manifest: {
         name: 'Elza Fala 📢',
         short_name: 'ElzaTalk',
-        description: 'Aplicativo de comunicação com a Elza', // Adicione uma descrição
-        start_url: '/fala-elza/', // Ajuste para incluir o base
+        description: 'Aplicativo de comunicação com a Elza',
+        start_url: '/fala-elza/',
         display: 'standalone',
         background_color: '#ffffff',
         theme_color: '#ffffff',
         icons: [
           {
-            src: '/android-chrome-192x192.png',
+            src: '/fala-elza/android-chrome-192x192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: '/android-chrome-512x512.png',
+            src: '/fala-elza/android-chrome-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-          },
-          {
-            src: '/apple-touch-icon.png',
-            sizes: '180x180',
-            type: 'image/png',
-            purpose: 'apple touch icon',
-          },
-          {
-            src: '/maskable-icon.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable',
           }
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          }
-        ]
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        navigateFallback: '/fala-elza/index.html',
       },
       devOptions: {
-        enabled: true // Habilita o PWA durante o desenvolvimento para testes
+        enabled: true
       }
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        assetFileNames: 'assets/[name].[hash].[ext]'
+      }
+    }
+  }
 });
