@@ -1,5 +1,5 @@
 {
-  "name": "receitas-app",
+  "name": "fala-elza",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
-  "homepage": "https://pelegobruno.github.io/talk-elza/",
+  "homepage": "https://pelegobruno.github.io/fala-elza/",
   "dependencies": {
     "localforage": "^1.10.0",
     "react": "^19.0.0",
