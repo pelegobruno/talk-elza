@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Link, useNavigate } from 'react-router-dom'; // ⚡ USAR HashRouter
 import Home from './pages/home';
 import Admin from './pages/Admin';
 import Util from './pages/util';
@@ -9,7 +9,7 @@ function App() {
   const isLogado = sessionStorage.getItem('logado') === 'true';
 
   return (
-    <BrowserRouter>
+    <HashRouter> {/* MUDANÇA AQUI */}
       <Navbar isLogado={isLogado} />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -17,7 +17,7 @@ function App() {
         <Route path="/util" element={<Util />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
@@ -45,6 +45,5 @@ function Navbar({ isLogado }) {
     </nav>
   );
 }
-
 
 export default App;
