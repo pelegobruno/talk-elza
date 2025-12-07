@@ -12,6 +12,8 @@
   },
   "homepage": "https://pelegobruno.github.io/talk-elza/",
   "dependencies": {
+    "@capacitor/cli": "^7.4.4",
+    "@capacitor/core": "^7.4.4",
     "dexie": "^4.2.1",
     "firebase": "^12.6.0",
     "jspdf": "^3.0.4",
