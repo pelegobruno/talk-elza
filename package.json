@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+<<<<<<< HEAD
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -16,6 +17,19 @@
     "dexie": "^4.4.3",
     "firebase": "^12.14.0",
     "jspdf": "^4.2.1",
+=======
+  
+  "scripts": {
+  "dev": "vite",
+  "build": "vite build",
+  "preview": "vite preview",
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d dist"
+},
+"homepage": "https://pelegobruno.github.io/talk-elza/",
+
+  "dependencies": {
+>>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
     "localforage": "^1.10.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

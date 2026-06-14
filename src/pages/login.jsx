@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+<<<<<<< HEAD
 // ⚡ AQUI ESTÁ A CORREÇÃO: Recebendo o setIsLogado para atualizar o menu instantaneamente
 function Login({ setIsLogado }) {
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
+=======
+function Login() {
+  const [usuario, setUsuario] = useState('');
+  const [senha, setSenha] = useState('');
+>>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
+<<<<<<< HEAD
     setErro(''); // Limpa os erros anteriores
 
     if (usuario === 'admin2025' && senha === 'admin2025') {
@@ -24,10 +31,18 @@ function Login({ setIsLogado }) {
     } else {
       // Mensagem de erro mais profissional do que um alert()
       setErro('Puxa, usuário ou senha estão incorretos. Tente novamente!');
+=======
+    if (usuario === 'admin2025' && senha === 'admin2025') {
+      sessionStorage.setItem('logado', 'true');
+      navigate('/admin');
+    } else {
+      alert('Usuário ou senha incorretos');
+>>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
     }
   };
 
   return (
+<<<<<<< HEAD
     <div style={styles.container}>
       <div style={styles.card}>
         
@@ -75,10 +90,30 @@ function Login({ setIsLogado }) {
 
         </form>
       </div>
+=======
+    <div>
+      <h2>Login do Administrador</h2>
+      <form onSubmit={handleLogin}>
+        <input
+          type="text"
+          placeholder="Usuário"
+          value={usuario}
+          onChange={(e) => setUsuario(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Senha"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+        />
+        <button type="submit">Entrar</button>
+      </form>
+>>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
     </div>
   );
 }
 
+<<<<<<< HEAD
 // ==========================================
 // ESTILOS NATIVOS DE APP (INLINE)
 // ==========================================
@@ -170,3 +205,6 @@ const styles = {
 };
 
 export default Login;
+=======
+export default Login;
+>>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
