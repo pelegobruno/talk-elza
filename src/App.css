@@ -12,7 +12,6 @@ body {
   padding: 20px;
 }
 
-<<<<<<< HEAD
 /* Navegação Otimizada (Flexbox) */
 .navbar-container {
   background-color: #fff;
@@ -54,41 +53,6 @@ body {
 .navbar-container .btn-sair:hover {
   background: #993730;
   color: white;
-=======
-/* Navegação */
-nav {
-  background-color: #fff;
-  padding: 1rem;
-  margin-bottom: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
-  text-align: center;
-}
-
-nav a {
-  text-decoration: none;
-  margin: 0 15px; /* Aumenta o espaçamento para melhor legibilidade */
-  color: #8e4a49;
-  font-weight: bold;
-  transition: color 0.3s; /* Efeito de transição para hover */
-}
-
-nav a:hover {
-  color: #993730; /* Cor ao passar o mouse */
-}
-
-nav button {
-  background: none;
-  border: none;
-  color: #8e4a49;
-  font-weight: bold;
-  cursor: pointer;
-  transition: color 0.3s; /* Efeito de transição para hover */
-}
-
-nav button:hover {
-  color: #993730; /* Cor ao passar o mouse */
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 }
 
 /* Cards de Receita */
@@ -98,53 +62,31 @@ nav button:hover {
   margin-bottom: 2rem;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
-<<<<<<< HEAD
   transition: transform 0.2s, box-shadow 0.2s;
-=======
-  transition: transform 0.2s, box-shadow 0.2s; /* Adiciona transição para sombra */
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 }
 
 .receita-card:hover {
   transform: scale(1.01);
-<<<<<<< HEAD
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-=======
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra mais pronunciada ao passar o mouse */
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 }
 
 .receita-card h3 {
   color: #D2691E;
-<<<<<<< HEAD
   font-size: 3rem;
   margin-bottom: 0.5rem;
   text-align: center;
-=======
-  font-size: 3rem; /* Aumenta o tamanho da fonte */
-  margin-bottom: 0.5rem;
-  text-align: center; /* Centraliza o título */
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 }
 
 .receita-card p {
   margin-top: 0.5rem;
   font-size: 1rem;
   line-height: 1.6;
-<<<<<<< HEAD
   text-align: center;
-=======
-  text-align: center; /* Centraliza o texto do parágrafo */
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 }
 
 .receita-card img {
   max-width: 100%;
-<<<<<<< HEAD
   height: auto;
-=======
-  height: auto; /* Mantém a proporção da imagem */
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
   border-radius: 10px;
   margin: 10px 0;
 }
@@ -176,11 +118,7 @@ button {
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-<<<<<<< HEAD
   transition: background-color 0.3s;
-=======
-  transition: background-color 0.3s; /* Efeito de transição para hover */
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 }
 
 button:hover {
@@ -189,13 +127,8 @@ button:hover {
 
 /* Responsividade */
 @media (max-width: 600px) {
-<<<<<<< HEAD
   .navbar-container {
     font-size: 0.9rem;
-=======
-  nav {
-    font-size: 0.9rem; /* Ajusta o tamanho da fonte para telas pequenas */
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
   }
 
   .receita-card {
@@ -203,49 +136,17 @@ button:hover {
   }
 
   .receita-card h3 {
-<<<<<<< HEAD
     font-size: 2.4rem;
   }
 }
 
 /**** Estilo para a fonte Mainstay Inicio *****/
-=======
-    font-size: 2.4rem; /* Ajuste do tamanho da fonte em telas pequenas */
-  }
-}
-
-.botoes-admin {
-  display: flex;
-  gap: 10px;
-}
-
-.botoes-admin button {
-  background-color: #b3473f;
-  color: white;
-  font-weight: bold;
-  border: none;
-  padding: 0.4rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s; /* Efeito de transição para hover */
-}
-
-.botoes-admin button:hover {
-  background-color: #993730;
-}
-
-/**** Estilo para a fonte Mainstay Inicio *****/
-/* Fonte Mainstay para h3 */
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 @font-face {
   font-family: 'Mainstay';
   src: url('./assets/fonts/mainstay/Mainstay.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
-<<<<<<< HEAD
   font-display: swap; /* ⚡ MÁGICA AQUI: Silencia o aviso amarelo */
-=======
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 }
 
 h3 {
@@ -258,7 +159,6 @@ h3 {
   src: url('./assets/fonts/04b_30/04B_30__.TTF');
   font-weight: normal;
   font-style: normal;
-<<<<<<< HEAD
   font-display: swap; /* ⚡ MÁGICA AQUI: Silencia o aviso amarelo */
 }
 
@@ -270,18 +170,6 @@ h1 {
   color: #ff0084;
   margin-bottom: 1rem;
 }
-=======
-}
-
-/*admin inicio*/
-  h1 {
-    font-family: 'Bombulate', sans-serif !important;
-    text-align: center;
-    font-size: 1.3rem;
-    color: #ff0084;
-    margin-bottom: 1rem;
-  }
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 /**** Estilo para a fonte Mainstay Fim *****/
 
 .receita-card ul,
@@ -319,7 +207,6 @@ h1 {
 /* Botões de ação */
 .botoes-admin {
   display: flex;
-<<<<<<< HEAD
   gap: 10px;
 }
 
@@ -336,15 +223,6 @@ h1 {
 
 .botoes-admin button:hover {
   background-color: #993730;
-=======
-  gap: 2px;
-}
-
-.botoes-admin button {
-  padding: 0.3rem 0.7rem;
-  font-size: 0.85rem;
-  border-radius: 6px;
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 }
 /*admin fim*/
 
@@ -369,9 +247,4 @@ h1 {
 .button-group button {
   margin-right: 5px;
 }
-<<<<<<< HEAD
 /***util fim***/
-=======
-/***util fim***/
-
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105

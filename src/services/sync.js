@@ -6,7 +6,6 @@ export async function getReceitasOffline() {
 }
 
 export async function salvarReceitaLocalmente(receita) {
-<<<<<<< HEAD
   // Se não tiver ID, cria um, senão usa o que já tem
   const receitaParaSalvar = {
     ...receita,
@@ -15,18 +14,10 @@ export async function salvarReceitaLocalmente(receita) {
     pendente: 1, 
   };
   await db.receitas.put(receitaParaSalvar);
-=======
-  await db.receitas.add({
-    ...receita,
-    createdAt: new Date().toISOString(),
-    pendente: true,
-  });
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 }
 
 export async function syncReceitasFirebaseParaLocal() {
   const firebaseReceitas = await getFirebaseReceitas();
-<<<<<<< HEAD
   
   // Garante que todas as receitas do Firebase tenham um ID válido antes de salvar localmente
   const receitasParaSalvar = firebaseReceitas.map(r => ({
@@ -42,29 +33,14 @@ export async function syncReceitasFirebaseParaLocal() {
   
   if (pendentes.length) {
     await db.receitas.bulkPut(pendentes);
-=======
-  const pendentes = await db.receitas.where('pendente').equals(true).toArray();
-
-  await db.receitas.clear();
-  await db.receitas.bulkAdd(firebaseReceitas);
-  if (pendentes.length) {
-    await db.receitas.bulkAdd(pendentes);
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
   }
 }
 
 export async function sincronizarPendentes() {
-<<<<<<< HEAD
   const pendentes = await db.receitas.where('pendente').equals(1).toArray();
 
   for (const receita of pendentes) {
     const { id, pendente, ...dados } = receita; 
-=======
-  const pendentes = await db.receitas.where('pendente').equals(true).toArray();
-
-  for (const receita of pendentes) {
-    const { id, ...dados } = receita;
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
     try {
       await saveReceita(dados);
       await db.receitas.delete(id);
@@ -73,10 +49,5 @@ export async function sincronizarPendentes() {
     }
   }
 
-<<<<<<< HEAD
   await syncReceitasFirebaseParaLocal(); 
 }
-=======
-  await syncReceitasFirebaseParaLocal(); // Atualiza tudo após sincronizar
-}
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105

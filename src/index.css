@@ -4,19 +4,12 @@
   font-weight: 400;
 
   color-scheme: light dark;
-<<<<<<< HEAD
-=======
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-<<<<<<< HEAD
 /* Removido o 'display: flex' e cores fixas que conflitavam com o seu App.css */
 body {
   margin: 0;
@@ -24,32 +17,16 @@ body {
   min-height: 100vh;
 }
 
-=======
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 a:hover {
   color: #535bf2;
 }
 
-<<<<<<< HEAD
-=======
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -66,17 +43,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-<<<<<<< HEAD
 
 button:hover {
   border-color: #646cff;
 }
 
-=======
-button:hover {
-  border-color: #646cff;
-}
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -93,8 +64,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 01484b9b1ef78fadd13b6d7ca749896bff1d1105
