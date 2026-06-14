@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { jsPDF } from 'jspdf';
 
-function KitchenUtils() {
+// Importando os áudios
+import audioTimer from '../assets/audio/timer.mp3';
+import audioUtil from '../assets/audio/util.mp3';
+
+export default function Util() {
+  // --- ESTADOS DOS INGREDIENTES E LISTAS ---
   const [searchTerm, setSearchTerm] = useState('');
   const [baseIngredients] = useState([
     { id: 1, name: 'Farinha de Trigo', unit: 'g' },
@@ -120,18 +125,16 @@ function KitchenUtils() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
-
-  const triggerToast = (message, type = 'success') => {
-    setToast({ show: true, message, type });
-    setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 3000);
-  };
-
-  // TIMERS E CRONÔMETRO
+  // --- ESTADOS DO TEMPORIZADOR PROFISSIONAL ---
   const [inputMinutes, setInputMinutes] = useState(0);
   const [inputSeconds, setInputSeconds] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
+  
+  const endTimeRef = useRef(null);
+  const wakeLockRef = useRef(null);
+  const timerAudioRef = useRef(new Audio(audioTimer));
+  const utilAudioRef = useRef(new Audio(audioUtil));
 
   useEffect(() => {
     localStorage.setItem('elza_shopping_list', JSON.stringify(shoppingList));
@@ -141,33 +144,137 @@ function KitchenUtils() {
     localStorage.setItem('elza_favorites', JSON.stringify(favorites));
   }, [favorites]);
 
-  useEffect(() => {
-    let interval = null;
-    if (timerActive && timeLeft > 0) {
-      interval = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    } else if (timeLeft === 0 && timerActive) {
-      setTimerActive(false);
-      triggerToast('🔔 Alarme! Seu prato está pronto!', 'info');
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
-        gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
-        oscillator.start();
-        setTimeout(() => oscillator.stop(), 1500);
-      } catch (e) {
-        console.log('Áudio não suportado.');
+  // Função para manter a tela ligada
+  const requestWakeLock = async () => {
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLockRef.current = await navigator.wakeLock.request('screen');
       }
+    } catch (err) {
+      console.log('Wake Lock falhou ou não é suportado:', err);
+    }
+  };
+
+  const releaseWakeLock = () => {
+    if (wakeLockRef.current !== null) {
+      wakeLockRef.current.release().catch(console.error);
+      wakeLockRef.current = null;
+    }
+  };
+
+  // Desliga o áudio do timer imediatamente
+  const stopTimerAudio = () => {
+    timerAudioRef.current.pause();
+    timerAudioRef.current.currentTime = 0;
+  };
+
+  // Sequência de áudio final (3 bips MAIS LENTOS + util.mp3)
+  const playEndSequence = () => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      let beepCount = 0;
+
+      const beep = () => {
+        if (beepCount >= 3) {
+          // Toca util.mp3 após os 3 bips
+          utilAudioRef.current.currentTime = 0;
+          utilAudioRef.current.play().catch(e => console.log(e));
+          return;
+        }
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, ctx.currentTime);
+        gain.gain.setValueAtTime(1, ctx.currentTime);
+        // Bipe mais longo e suave (0.5 segundos)
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.5);
+
+        beepCount++;
+        // Intervalo de 1 segundo (1000ms) entre os bipes para ficar mais agradável
+        setTimeout(beep, 1000); 
+      };
+
+      beep();
+    } catch (e) {
+      console.log('Áudio não suportado.');
+    }
+  };
+
+  // Loop inteligente do temporizador (funciona com tela apagada)
+  useEffect(() => {
+    let interval;
+    if (timerActive) {
+      interval = setInterval(() => {
+        const remaining = Math.round((endTimeRef.current - Date.now()) / 1000);
+        
+        if (remaining <= 0) {
+          clearInterval(interval);
+          setTimeLeft(0);
+          setTimerActive(false);
+          releaseWakeLock();
+          stopTimerAudio(); // INTERROMPE O ÁUDIO DO TIMER NA HORA
+          playEndSequence();
+        } else {
+          setTimeLeft(remaining);
+        }
+      }, 500);
     }
     return () => clearInterval(interval);
-  }, [timerActive, timeLeft]);
+  }, [timerActive]);
 
+  const startPreciseTimer = (totalSeconds) => {
+    if (totalSeconds <= 0) return;
+    
+    endTimeRef.current = Date.now() + totalSeconds * 1000;
+    setTimeLeft(totalSeconds);
+    setTimerActive(true);
+    setInputMinutes(0);
+    setInputSeconds(0);
+
+    requestWakeLock();
+
+    // Toca o audio do timer rodando
+    timerAudioRef.current.currentTime = 0;
+    timerAudioRef.current.loop = true; 
+    timerAudioRef.current.play().catch(e => console.log('Áudio bloqueado'));
+  };
+
+  const handleStartTimer = () => {
+    const totalSeconds = (parseInt(inputMinutes) || 0) * 60 + (parseInt(inputSeconds) || 0);
+    startPreciseTimer(totalSeconds);
+  };
+
+  const setPresetTimer = (minutes) => {
+    startPreciseTimer(minutes * 60);
+  };
+
+  // Funções para Pausar e Zerar (Interrompem o som)
+  const handlePause = () => {
+    setTimerActive(false);
+    stopTimerAudio();
+  };
+
+  const handleZero = () => {
+    setTimerActive(false);
+    setTimeLeft(0);
+    releaseWakeLock();
+    stopTimerAudio();
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // --- FUNÇÕES DA LISTA E FAVORITOS ---
   const filteredIngredients = ingredients.filter((ing) =>
     ing.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -182,24 +289,18 @@ function KitchenUtils() {
 
   const addFavorite = (ingredient) => {
     setFavorites((prev) => {
-      if (prev.some((f) => f.id === ingredient.id)) {
-        triggerToast(`${ingredient.name} já está nos favoritos.`, 'info');
-        return prev;
-      }
-      triggerToast(`❤️ ${ingredient.name} favoritado com sucesso!`);
+      if (prev.some((f) => f.id === ingredient.id)) return prev;
       return [...prev, ingredient];
     });
   };
 
   const removeFavorite = (id) => {
     setFavorites((prev) => prev.filter((item) => item.id !== id));
-    triggerToast('Item removido dos favoritos.', 'info');
   };
 
   const addToShoppingList = (ingredient) => {
     setShoppingList((prev) => {
       const existing = prev.find((item) => item.id === ingredient.id);
-      triggerToast(`🛒 ${ingredient.quantity}x ${ingredient.name} adicionado à lista!`);
       if (existing) {
         return prev.map((item) =>
           item.id === ingredient.id
@@ -213,37 +314,10 @@ function KitchenUtils() {
 
   const removeFromShoppingList = (id) => {
     setShoppingList((prev) => prev.filter((item) => item.id !== id));
-    triggerToast('Item removido da lista de compras.', 'info');
-  };
-
-  const handleStartTimer = () => {
-    const totalSeconds = (parseInt(inputMinutes) || 0) * 60 + (parseInt(inputSeconds) || 0);
-    if (totalSeconds <= 0) {
-      triggerToast('Defina um tempo maior que zero!', 'error');
-      return;
-    }
-    setTimeLeft(totalSeconds);
-    setTimerActive(true);
-    triggerToast('⏱️ Cronômetro iniciado!');
-  };
-
-  const setPresetTimer = (minutes) => {
-    setTimeLeft(minutes * 60);
-    setTimerActive(true);
-    triggerToast(`⏱️ Timer de ${minutes} min iniciado!`);
-  };
-
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   const generatePDF = () => {
-    if (shoppingList.length === 0) {
-      triggerToast('Sua lista de compras está vazia!', 'error');
-      return;
-    }
+    if (shoppingList.length === 0) return;
 
     const doc = new jsPDF();
     const dateStr = new Date().toLocaleDateString('pt-BR').replace(/\//g, '');
@@ -321,32 +395,11 @@ function KitchenUtils() {
     doc.text('Documento gerado automaticamente pelo App Culinaria Elza', 105, yPosition + 12, { align: 'center' });
     
     doc.save(`Lista_Compras_${listID}.pdf`);
-    triggerToast('📄 PDF exportado com sucesso!');
   };
 
   return (
     <div className="kitchen-utils" style={{ maxWidth: '800px', margin: '0 auto', padding: '20px', position: 'relative' }}>
       
-      {toast.show && (
-        <div style={{
-          position: 'fixed',
-          top: '20px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          backgroundColor: toast.type === 'error' ? '#ff3333' : toast.type === 'info' ? '#2196F3' : '#4CAF50',
-          color: 'white',
-          padding: '12px 30px',
-          borderRadius: '30px',
-          fontWeight: 'bold',
-          boxShadow: '0 5px 20px rgba(0,0,0,0.2)',
-          zIndex: 9999,
-          fontSize: '1rem',
-          transition: 'all 0.3s ease'
-        }}>
-          {toast.message}
-        </div>
-      )}
-
       <h1 className="titulo-admin" style={{ fontSize: '2.5rem' }}>Utilitários de Cozinha</h1>
 
       {/* PAINEL CENTRAL DO TIMER */}
@@ -361,56 +414,61 @@ function KitchenUtils() {
           {!timerActive ? (
             <>
               <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '15px' }}>
-                <input type="number" placeholder="Min" min="0" onChange={(e) => setInputMinutes(Math.max(0, parseInt(e.target.value) || 0))} style={{ width: '80px', padding: '8px', textAlign: 'center', margin: 0 }} />
-                <input type="number" placeholder="Seg" min="0" max="59" onChange={(e) => setInputSeconds(Math.max(0, Math.min(59, parseInt(e.target.value) || 0)))} style={{ width: '80px', padding: '8px', textAlign: 'center', margin: 0 }} />
-                <button onClick={handleStartTimer} style={{ backgroundColor: '#ff0084', padding: '8px 20px' }}>Ligar</button>
+                <input type="number" placeholder="Min" min="0" value={inputMinutes} onChange={(e) => setInputMinutes(Math.max(0, parseInt(e.target.value) || 0))} style={{ width: '80px', padding: '8px', textAlign: 'center', margin: 0 }} />
+                <input type="number" placeholder="Seg" min="0" max="59" value={inputSeconds} onChange={(e) => setInputSeconds(Math.max(0, Math.min(59, parseInt(e.target.value) || 0)))} style={{ width: '80px', padding: '8px', textAlign: 'center', margin: 0 }} />
+                <button onClick={handleStartTimer} style={{ backgroundColor: '#ff0084', padding: '8px 20px', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Ligar</button>
               </div>
 
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                <button onClick={() => setPresetTimer(6)} style={{ fontSize: '0.85rem', padding: '6px 10px', backgroundColor: '#f0f0f0', color: '#333' }}>Ovo Cozido (6m)</button>
-                <button onClick={() => setPresetTimer(8)} style={{ fontSize: '0.85rem', padding: '6px 10px', backgroundColor: '#f0f0f0', color: '#333' }}>Massa (8m)</button>
-                <button onClick={() => setPresetTimer(20)} style={{ fontSize: '0.85rem', padding: '6px 10px', backgroundColor: '#f0f0f0', color: '#333' }}>Arroz (20m)</button>
-                <button onClick={() => setPresetTimer(35)} style={{ fontSize: '0.85rem', padding: '6px 10px', backgroundColor: '#f0f0f0', color: '#333' }}>Bolo (35m)</button>
+                <button onClick={() => setPresetTimer(6)} style={{ fontSize: '0.85rem', padding: '6px 10px', backgroundColor: '#f0f0f0', color: '#333', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Ovo Cozido (6m)</button>
+                <button onClick={() => setPresetTimer(8)} style={{ fontSize: '0.85rem', padding: '6px 10px', backgroundColor: '#f0f0f0', color: '#333', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Massa (8m)</button>
+                <button onClick={() => setPresetTimer(20)} style={{ fontSize: '0.85rem', padding: '6px 10px', backgroundColor: '#f0f0f0', color: '#333', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Arroz (20m)</button>
+                <button onClick={() => setPresetTimer(35)} style={{ fontSize: '0.85rem', padding: '6px 10px', backgroundColor: '#f0f0f0', color: '#333', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Bolo (35m)</button>
               </div>
             </>
           ) : (
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '10px' }}>
-              <button onClick={() => setTimerActive(false)} style={{ backgroundColor: '#ff9800', padding: '8px 20px' }}>Pausar</button>
-              <button onClick={() => { setTimerActive(false); setTimeLeft(0); }} style={{ backgroundColor: '#777', padding: '8px 20px' }}>Zerar</button>
+              <button onClick={handlePause} style={{ backgroundColor: '#ff9800', padding: '8px 20px', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Pausar</button>
+              <button onClick={handleZero} style={{ backgroundColor: '#777', padding: '8px 20px', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Zerar</button>
             </div>
           )}
         </div>
       </div>
 
-      {/* ROL DE INGREDIENTES */}
-      <section className="ingredients-list" style={{ marginBottom: '30px' }}>
-        <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#8e4a49' }}>
-          🧂 Rol de Ingredientes Disponíveis
-        </h3>
-        <input
-          type="text"
-          placeholder="🔍 Digite para pesquisar ingrediente..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ width: '100%', padding: '10px', marginBottom: '15px', borderRadius: '5px', border: '1px solid #ddd' }}
-        />
-        <ul style={{ listStyle: 'none', padding: 0, maxHeight: '350px', overflowY: 'auto', border: '1px solid #eee', paddingRight: '5px' }}>
+      {/* ROL DE INGREDIENTES NOVO VISUAL */}
+      <section className="ingredientes-section">
+        <h2 className="ingredientes-titulo">🧂 Rol de Ingredientes Disponíveis</h2>
+        
+        <div className="pesquisa-container">
+          <span className="pesquisa-icone">🔍</span>
+          <input 
+            type="text" 
+            placeholder="Digite para pesquisar ingrediente..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pesquisa-input"
+          />
+        </div>
+
+        <ul className="ingredientes-lista" style={{ maxHeight: '350px', overflowY: 'auto' }}>
           {filteredIngredients.map((ing) => (
-            <li key={ing.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', marginBottom: '8px', backgroundColor: '#f9f9f9', borderRadius: '5px' }}>
-              <span style={{ flex: 1, fontWeight: '500' }}>{ing.name}</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <input
-                  type="number"
-                  value={ing.quantity}
+            <li key={ing.id} className="ingrediente-item">
+              <div className="ing-nome">{ing.name}</div>
+              
+              <div className="ing-meio">
+                <input 
+                  type="number" 
+                  value={ing.quantity} 
                   onChange={(e) => updateQuantity(ing.id, Math.max(1, Number(e.target.value) || 1))}
-                  min="1"
-                  style={{ width: '60px', padding: '5px', textAlign: 'center', borderRadius: '3px', border: '1px solid #ddd', margin: 0 }}
+                  min="1" 
+                  className="ing-qtd" 
                 />
-                <span style={{ width: '30px', fontSize: '0.9rem', color: '#666' }}>{ing.unit}</span>
+                <span className="ing-unidade">{ing.unit}</span>
               </div>
-              <div className="button-group" style={{ display: 'flex', gap: '5px', marginLeft: '15px' }}>
-                <button onClick={() => addToShoppingList(ing)} style={{ padding: '5px 12px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Lista</button>
-                <button onClick={() => addFavorite(ing)} style={{ padding: '5px 12px', backgroundColor: '#e91e63', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Favorito</button>
+              
+              <div className="ing-acoes">
+                <button className="btn-lista" onClick={() => addToShoppingList(ing)}>Lista</button>
+                <button className="btn-favorito" onClick={() => addFavorite(ing)}>Favorito</button>
               </div>
             </li>
           ))}
@@ -468,5 +526,3 @@ function KitchenUtils() {
     </div>
   );
 }
-
-export default KitchenUtils;

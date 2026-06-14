@@ -1,3 +1,6 @@
+/* --- Importa fonte elegante para o título dos ingredientes (DEVE FICAR NA LINHA 1) --- */
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
 /* Reset */
 * {
   margin: 0;
@@ -47,7 +50,7 @@ body {
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s;
-  margin: 0; /* Remove a margem padrão para o flexbox gerenciar o gap perfeitamente */
+  margin: 0; 
 }
 
 .navbar-container .btn-sair:hover {
@@ -146,7 +149,7 @@ button:hover {
   src: url('./assets/fonts/mainstay/Mainstay.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap; /* ⚡ MÁGICA AQUI: Silencia o aviso amarelo */
+  font-display: swap; 
 }
 
 h3 {
@@ -159,7 +162,7 @@ h3 {
   src: url('./assets/fonts/04b_30/04B_30__.TTF');
   font-weight: normal;
   font-style: normal;
-  font-display: swap; /* ⚡ MÁGICA AQUI: Silencia o aviso amarelo */
+  font-display: swap; 
 }
 
 /*admin inicio*/
@@ -247,4 +250,101 @@ h1 {
 .button-group button {
   margin-right: 5px;
 }
-/***util fim***/
+
+/* --- Rol de Ingredientes (NOVO) --- */
+.ingredientes-section {
+  background-color: #fff9f5;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.ingredientes-titulo {
+  font-family: 'Lobster', cursive; /* Aplica a fonte importada lá no topo */
+  color: #ff0084; /* Cor Rosa Idêntica aos outros títulos! */
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.pesquisa-container {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-bottom: 20px;
+}
+
+.pesquisa-icone {
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+.pesquisa-input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 1rem;
+  color: #666;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+}
+
+.ingredientes-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ingrediente-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 15px 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.ing-nome {
+  flex: 1;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.ing-meio {
+  display: flex;
+  align-items: center;
+  margin: 0 15px;
+}
+
+.ing-qtd {
+  width: 50px;
+  text-align: center;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+
+.ing-unidade {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.ing-acoes button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 5px;
+  color: white;
+}
+
+.btn-lista { background-color: #4caf50; }
+.btn-favorito { background-color: #e91e63; }
