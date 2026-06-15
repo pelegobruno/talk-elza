@@ -100,7 +100,7 @@ iframe {
   border-radius: 8px;
 }
 
-/* Inputs e Botões */
+/* Inputs e Botões (CORREÇÃO DA ESCRITA FANTASMA AQUI) */
 input,
 textarea {
   width: 100%;
@@ -111,6 +111,7 @@ textarea {
   background-color: #fffdfb;
   font-family: 'Georgia', serif;
   font-size: 1rem;
+  color: #333 !important; /* <--- MÁGICA CONTRA TEXTO FANTASMA AQUI */
 }
 
 button {
@@ -260,8 +261,8 @@ h1 {
 }
 
 .ingredientes-titulo {
-  font-family: 'Lobster', cursive; /* Aplica a fonte importada lá no topo */
-  color: #ff0084; /* Cor Rosa Idêntica aos outros títulos! */
+  font-family: 'Lobster', cursive; 
+  color: #ff0084; 
   font-size: 2rem;
   margin-bottom: 20px;
   text-align: left;
@@ -287,7 +288,7 @@ h1 {
   outline: none;
   width: 100%;
   font-size: 1rem;
-  color: #666;
+  color: #333 !important; 
   background-color: transparent;
   margin: 0;
   padding: 0;

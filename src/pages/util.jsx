@@ -126,8 +126,8 @@ export default function Util() {
   });
 
   // --- ESTADOS DO TEMPORIZADOR PROFISSIONAL ---
-  const [inputMinutes, setInputMinutes] = useState(0);
-  const [inputSeconds, setInputSeconds] = useState(0);
+  const [inputMinutes, setInputMinutes] = useState(''); // Estado inicial vazio para o input
+  const [inputSeconds, setInputSeconds] = useState(''); // Estado inicial vazio para o input
   const [timeLeft, setTimeLeft] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   
@@ -168,7 +168,7 @@ export default function Util() {
     timerAudioRef.current.currentTime = 0;
   };
 
-  // Sequência de áudio final (3 bips MAIS LENTOS + util.mp3)
+  // Sequência de áudio final
   const playEndSequence = () => {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -176,7 +176,6 @@ export default function Util() {
 
       const beep = () => {
         if (beepCount >= 3) {
-          // Toca util.mp3 após os 3 bips
           utilAudioRef.current.currentTime = 0;
           utilAudioRef.current.play().catch(e => console.log(e));
           return;
@@ -190,14 +189,12 @@ export default function Util() {
         osc.type = 'sine';
         osc.frequency.setValueAtTime(800, ctx.currentTime);
         gain.gain.setValueAtTime(1, ctx.currentTime);
-        // Bipe mais longo e suave (0.5 segundos)
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
 
         osc.start(ctx.currentTime);
         osc.stop(ctx.currentTime + 0.5);
 
         beepCount++;
-        // Intervalo de 1 segundo (1000ms) entre os bipes para ficar mais agradável
         setTimeout(beep, 1000); 
       };
 
@@ -207,7 +204,7 @@ export default function Util() {
     }
   };
 
-  // Loop inteligente do temporizador (funciona com tela apagada)
+  // Loop inteligente do temporizador
   useEffect(() => {
     let interval;
     if (timerActive) {
@@ -219,7 +216,7 @@ export default function Util() {
           setTimeLeft(0);
           setTimerActive(false);
           releaseWakeLock();
-          stopTimerAudio(); // INTERROMPE O ÁUDIO DO TIMER NA HORA
+          stopTimerAudio(); 
           playEndSequence();
         } else {
           setTimeLeft(remaining);
@@ -235,12 +232,11 @@ export default function Util() {
     endTimeRef.current = Date.now() + totalSeconds * 1000;
     setTimeLeft(totalSeconds);
     setTimerActive(true);
-    setInputMinutes(0);
-    setInputSeconds(0);
+    setInputMinutes(''); // Limpa o input ao iniciar
+    setInputSeconds(''); // Limpa o input ao iniciar
 
     requestWakeLock();
 
-    // Toca o audio do timer rodando
     timerAudioRef.current.currentTime = 0;
     timerAudioRef.current.loop = true; 
     timerAudioRef.current.play().catch(e => console.log('Áudio bloqueado'));
@@ -255,7 +251,6 @@ export default function Util() {
     startPreciseTimer(minutes * 60);
   };
 
-  // Funções para Pausar e Zerar (Interrompem o som)
   const handlePause = () => {
     setTimerActive(false);
     stopTimerAudio();
@@ -408,15 +403,35 @@ export default function Util() {
           <h3 style={{ color: '#ff0084', margin: '0 0 10px 0' }}>⏱️ Timer de Cozinha</h3>
           
           <div style={{ fontSize: '3.5rem', fontWeight: 'bold', fontFamily: 'monospace', margin: '5px 0', color: timerActive ? '#ff0084' : '#333' }}>
-            {timerActive ? formatTime(timeLeft) : formatTime((inputMinutes * 60) + (inputSeconds * 1))}
+            {timerActive ? formatTime(timeLeft) : formatTime((parseInt(inputMinutes) || 0) * 60 + (parseInt(inputSeconds) || 0))}
           </div>
 
           {!timerActive ? (
             <>
               <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '15px' }}>
-                <input type="number" placeholder="Min" min="0" value={inputMinutes} onChange={(e) => setInputMinutes(Math.max(0, parseInt(e.target.value) || 0))} style={{ width: '80px', padding: '8px', textAlign: 'center', margin: 0 }} />
-                <input type="number" placeholder="Seg" min="0" max="59" value={inputSeconds} onChange={(e) => setInputSeconds(Math.max(0, Math.min(59, parseInt(e.target.value) || 0)))} style={{ width: '80px', padding: '8px', textAlign: 'center', margin: 0 }} />
-                <button onClick={handleStartTimer} style={{ backgroundColor: '#ff0084', padding: '8px 20px', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Ligar</button>
+                <input 
+                  type="text" 
+                  inputMode="numeric" 
+                  maxLength="2" 
+                  placeholder="Min" 
+                  value={inputMinutes} 
+                  onChange={(e) => setInputMinutes(e.target.value.replace(/\D/g, ''))} 
+                  style={{ width: '80px', padding: '8px', textAlign: 'center', margin: 0, color: '#333', fontSize: '1.2rem', fontWeight: 'bold' }} 
+                />
+                <input 
+                  type="text" 
+                  inputMode="numeric" 
+                  maxLength="2" 
+                  placeholder="Seg" 
+                  value={inputSeconds} 
+                  onChange={(e) => {
+                    let val = e.target.value.replace(/\D/g, '');
+                    if (parseInt(val) > 59) val = '59'; // Trava em 59
+                    setInputSeconds(val);
+                  }} 
+                  style={{ width: '80px', padding: '8px', textAlign: 'center', margin: 0, color: '#333', fontSize: '1.2rem', fontWeight: 'bold' }} 
+                />
+                <button onClick={handleStartTimer} style={{ backgroundColor: '#ff0084', padding: '8px 20px', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>Ligar</button>
               </div>
 
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -435,7 +450,7 @@ export default function Util() {
         </div>
       </div>
 
-      {/* ROL DE INGREDIENTES NOVO VISUAL */}
+      {/* ROL DE INGREDIENTES */}
       <section className="ingredientes-section">
         <h2 className="ingredientes-titulo">🧂 Rol de Ingredientes Disponíveis</h2>
         
@@ -447,6 +462,7 @@ export default function Util() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pesquisa-input"
+            style={{ color: '#333' }}
           />
         </div>
 
@@ -457,11 +473,16 @@ export default function Util() {
               
               <div className="ing-meio">
                 <input 
-                  type="number" 
+                  type="text" 
+                  inputMode="numeric"
+                  maxLength="3"
                   value={ing.quantity} 
-                  onChange={(e) => updateQuantity(ing.id, Math.max(1, Number(e.target.value) || 1))}
-                  min="1" 
+                  onChange={(e) => {
+                    let val = e.target.value.replace(/\D/g, '');
+                    updateQuantity(ing.id, val === '' ? 1 : Number(val));
+                  }}
                   className="ing-qtd" 
+                  style={{ color: '#333' }}
                 />
                 <span className="ing-unidade">{ing.unit}</span>
               </div>
@@ -485,7 +506,7 @@ export default function Util() {
             <ul style={{ listStyle: 'none', padding: 0 }}>
               {shoppingList.map((item) => (
                 <li key={item.id} style={{ padding: '10px 0', borderBottom: '1px solid #ddd', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontWeight: '500' }}>{item.name}</span>
+                  <span style={{ fontWeight: '500', color: '#333' }}>{item.name}</span>
                   <div style={{ display: 'flex', gap: '15px', alignItems: 'center', marginLeft: 'auto' }}>
                     <span style={{ fontWeight: 'bold', color: '#333', marginRight: '10px' }}>{item.quantity} {item.unit}</span>
                     <button onClick={() => removeFromShoppingList(item.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', padding: 0 }}>❌</button>
@@ -511,7 +532,7 @@ export default function Util() {
           <ul style={{ listStyle: 'none', padding: 0 }}>
             {favorites.map((fav) => (
               <li key={fav.id} style={{ padding: '10px 0', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: '500' }}>{fav.name}</span>
+                <span style={{ fontWeight: '500', color: '#333' }}>{fav.name}</span>
                 <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
                   <span style={{ color: '#666' }}>Padrão: {fav.quantity} {fav.unit}</span>
                   <button onClick={() => removeFavorite(fav.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', padding: 0 }}>❌</button>
