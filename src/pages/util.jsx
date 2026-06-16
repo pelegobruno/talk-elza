@@ -126,8 +126,8 @@ export default function Util() {
   });
 
   // --- ESTADOS DO TEMPORIZADOR PROFISSIONAL ---
-  const [inputMinutes, setInputMinutes] = useState(''); // Estado inicial vazio para o input
-  const [inputSeconds, setInputSeconds] = useState(''); // Estado inicial vazio para o input
+  const [inputMinutes, setInputMinutes] = useState(''); 
+  const [inputSeconds, setInputSeconds] = useState(''); 
   const [timeLeft, setTimeLeft] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   
@@ -232,8 +232,8 @@ export default function Util() {
     endTimeRef.current = Date.now() + totalSeconds * 1000;
     setTimeLeft(totalSeconds);
     setTimerActive(true);
-    setInputMinutes(''); // Limpa o input ao iniciar
-    setInputSeconds(''); // Limpa o input ao iniciar
+    setInputMinutes(''); 
+    setInputSeconds(''); 
 
     requestWakeLock();
 
@@ -393,12 +393,12 @@ export default function Util() {
   };
 
   return (
-    <div className="kitchen-utils" style={{ maxWidth: '800px', margin: '0 auto', padding: '20px', position: 'relative' }}>
+    <div className="kitchen-utils">
       
       <h1 className="titulo-admin" style={{ fontSize: '2.5rem' }}>Utilitários de Cozinha</h1>
 
       {/* PAINEL CENTRAL DO TIMER */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px' }}>
+      <div className="card-container" style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px' }}>
         <div style={{ width: '100%', maxWidth: '500px', backgroundColor: '#fff', padding: '25px', borderRadius: '15px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', textAlign: 'center' }}>
           <h3 style={{ color: '#ff0084', margin: '0 0 10px 0' }}>⏱️ Timer de Cozinha</h3>
           
@@ -426,7 +426,7 @@ export default function Util() {
                   value={inputSeconds} 
                   onChange={(e) => {
                     let val = e.target.value.replace(/\D/g, '');
-                    if (parseInt(val) > 59) val = '59'; // Trava em 59
+                    if (parseInt(val) > 59) val = '59'; 
                     setInputSeconds(val);
                   }} 
                   style={{ width: '80px', padding: '8px', textAlign: 'center', margin: 0, color: '#333', fontSize: '1.2rem', fontWeight: 'bold' }} 
@@ -462,35 +462,39 @@ export default function Util() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pesquisa-input"
-            style={{ color: '#333' }}
           />
         </div>
 
-        <ul className="ingredientes-lista" style={{ maxHeight: '350px', overflowY: 'auto' }}>
+        <ul className="ingredientes-lista" style={{ maxHeight: '400px', overflowY: 'auto', overflowX: 'hidden' }}>
           {filteredIngredients.map((ing) => (
             <li key={ing.id} className="ingrediente-item">
+              
+              {/* Andar de Cima: Nome centralizado ganhando todo o espaço */}
               <div className="ing-nome">{ing.name}</div>
               
-              <div className="ing-meio">
-                <input 
-                  type="text" 
-                  inputMode="numeric"
-                  maxLength="3"
-                  value={ing.quantity} 
-                  onChange={(e) => {
-                    let val = e.target.value.replace(/\D/g, '');
-                    updateQuantity(ing.id, val === '' ? 1 : Number(val));
-                  }}
-                  className="ing-qtd" 
-                  style={{ color: '#333' }}
-                />
-                <span className="ing-unidade">{ing.unit}</span>
+              {/* Andar de Baixo: Quantidade na esquerda e Botões na Direita */}
+              <div className="ing-controles">
+                <div className="ing-meio">
+                  <input 
+                    type="text" 
+                    inputMode="numeric"
+                    maxLength="3"
+                    value={ing.quantity} 
+                    onChange={(e) => {
+                      let val = e.target.value.replace(/\D/g, '');
+                      updateQuantity(ing.id, val === '' ? 1 : Number(val));
+                    }}
+                    className="ing-qtd" 
+                  />
+                  <span className="ing-unidade">{ing.unit}</span>
+                </div>
+                
+                <div className="ing-acoes">
+                  <button className="btn-lista" onClick={() => addToShoppingList(ing)}>Lista</button>
+                  <button className="btn-favorito" onClick={() => addFavorite(ing)}>Favorito</button>
+                </div>
               </div>
-              
-              <div className="ing-acoes">
-                <button className="btn-lista" onClick={() => addToShoppingList(ing)}>Lista</button>
-                <button className="btn-favorito" onClick={() => addFavorite(ing)}>Favorito</button>
-              </div>
+
             </li>
           ))}
         </ul>
@@ -498,15 +502,15 @@ export default function Util() {
 
       {/* LISTA DE COMPRAS */}
       <section className="shopping-list" style={{ backgroundColor: '#f0f8ff', padding: '20px', borderRadius: '15px', marginBottom: '30px', boxShadow: '0 4px 10px rgba(0,0,0,0.03)' }}>
-        <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#2196F3' }}>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#2196F3', flexWrap: 'wrap' }}>
           🛒 Minha Lista de Compras Atual
         </h3>
         {shoppingList.length > 0 ? (
           <>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               {shoppingList.map((item) => (
-                <li key={item.id} style={{ padding: '10px 0', borderBottom: '1px solid #ddd', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontWeight: '500', color: '#333' }}>{item.name}</span>
+                <li key={item.id} className="lista-compra-item" style={{ padding: '12px 0', borderBottom: '1px solid #ddd', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontWeight: 'bold', color: '#333', flex: '1 1 100%' }}>{item.name}</span>
                   <div style={{ display: 'flex', gap: '15px', alignItems: 'center', marginLeft: 'auto' }}>
                     <span style={{ fontWeight: 'bold', color: '#333', marginRight: '10px' }}>{item.quantity} {item.unit}</span>
                     <button onClick={() => removeFromShoppingList(item.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', padding: 0 }}>❌</button>
@@ -525,15 +529,15 @@ export default function Util() {
 
       {/* FAVORITOS */}
       <section className="favorites" style={{ backgroundColor: '#fffaf0', padding: '20px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.03)' }}>
-        <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#ff0084' }}>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#ff0084', flexWrap: 'wrap' }}>
           ⭐ Meus Ingredientes Favoritos
         </h3>
         {favorites.length > 0 ? (
           <ul style={{ listStyle: 'none', padding: 0 }}>
             {favorites.map((fav) => (
-              <li key={fav.id} style={{ padding: '10px 0', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: '500', color: '#333' }}>{fav.name}</span>
-                <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+              <li key={fav.id} className="lista-compra-item" style={{ padding: '12px 0', borderBottom: '1px solid #eee', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontWeight: 'bold', color: '#333', flex: '1 1 100%' }}>{fav.name}</span>
+                <div style={{ display: 'flex', gap: '15px', alignItems: 'center', marginLeft: 'auto' }}>
                   <span style={{ color: '#666' }}>Padrão: {fav.quantity} {fav.unit}</span>
                   <button onClick={() => removeFavorite(fav.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', padding: 0 }}>❌</button>
                 </div>

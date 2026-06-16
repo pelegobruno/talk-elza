@@ -1,7 +1,7 @@
 /* --- Importa fonte elegante para o título dos ingredientes (DEVE FICAR NA LINHA 1) --- */
 @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
 
-/* Reset */
+/* Reset Universal (Evita a barra de rolagem horizontal) */
 * {
   margin: 0;
   padding: 0;
@@ -12,19 +12,20 @@ body {
   background: #fff8f0;
   color: #333;
   font-family: 'Georgia', 'Times New Roman', serif;
-  padding: 20px;
+  overflow-x: hidden; /* BLOQUEIA rolagem lateral na tela inteira */
 }
 
 /* Navegação Otimizada (Flexbox) */
 .navbar-container {
   background-color: #fff;
   padding: 1.2rem;
-  margin-bottom: 2rem;
+  margin: 20px;
   border-radius: 8px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap; /* Ajuda no mobile */
   gap: 20px;
 }
 
@@ -62,7 +63,7 @@ body {
 .receita-card {
   background-color: #fffdf9;
   padding: 1.5rem;
-  margin-bottom: 2rem;
+  margin: 20px;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
   transition: transform 0.2s, box-shadow 0.2s;
@@ -96,6 +97,7 @@ body {
 
 iframe {
   display: block;
+  max-width: 100%;
   margin: 1rem auto;
   border-radius: 8px;
 }
@@ -111,7 +113,7 @@ textarea {
   background-color: #fffdfb;
   font-family: 'Georgia', serif;
   font-size: 1rem;
-  color: #333 !important; /* <--- MÁGICA CONTRA TEXTO FANTASMA AQUI */
+  color: #333 !important; /* MÁGICA CONTRA TEXTO FANTASMA NO MOBILE */
 }
 
 button {
@@ -129,10 +131,12 @@ button:hover {
   background-color: #3a2424;
 }
 
-/* Responsividade */
+/* Responsividade Global */
 @media (max-width: 600px) {
   .navbar-container {
     font-size: 0.9rem;
+    padding: 1rem;
+    gap: 15px;
   }
 
   .receita-card {
@@ -230,42 +234,36 @@ h1 {
 }
 /*admin fim*/
 
-/****util inicio***/
+/**** Util Section ****/
 .kitchen-utils {
-  padding: 2rem;
+  padding: 1.5rem;
   background-color: #fff8f0;
   border-radius: 12px;
   max-width: 800px;
-  margin: auto;
+  margin: 0 auto;
+  width: 100%;
 }
 
-.kitchen-utils section {
-  margin-bottom: 2rem;
+.card-container {
+  width: 100%;
 }
 
-.kitchen-utils h3 {
-  margin-bottom: 0.5rem;
-  color: #993730;
-}
-
-.button-group button {
-  margin-right: 5px;
-}
-
-/* --- Rol de Ingredientes (NOVO) --- */
+/* --- Rol de Ingredientes (NOVO LAYOUT INTELIGENTE MOBILE) --- */
 .ingredientes-section {
   background-color: #fff9f5;
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 30px;
+  width: 100%;
 }
 
 .ingredientes-titulo {
   font-family: 'Lobster', cursive; 
   color: #ff0084; 
-  font-size: 2rem;
+  font-size: 1.8rem; /* Menor para não quebrar feio */
   margin-bottom: 20px;
-  text-align: left;
+  text-align: center; /* Centralizado no mobile fica perfeito */
+  line-height: 1.2;
 }
 
 .pesquisa-container {
@@ -276,6 +274,7 @@ h1 {
   border-radius: 5px;
   padding: 8px 12px;
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .pesquisa-icone {
@@ -288,7 +287,6 @@ h1 {
   outline: none;
   width: 100%;
   font-size: 1rem;
-  color: #333 !important; 
   background-color: transparent;
   margin: 0;
   padding: 0;
@@ -298,54 +296,101 @@ h1 {
   list-style: none;
   padding: 0;
   margin: 0;
+  width: 100%;
 }
 
+/* O Segredo do Layout 2 Andares */
 .ingrediente-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column; /* Coloca o nome em cima, controles em baixo */
+  gap: 12px;
   background-color: white;
-  padding: 15px 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.04);
 }
 
 .ing-nome {
-  flex: 1;
-  font-size: 1.1rem;
+  width: 100%;
+  font-size: 1.2rem;
   color: #333;
+  font-weight: bold;
+  text-align: center;
+  border-bottom: 1px dashed #eee; /* Linha sutil separando o nome */
+  padding-bottom: 8px;
+}
+
+.ing-controles {
+  display: flex;
+  justify-content: space-between; /* Imput na Esquerda, Botões na Direita */
+  align-items: center;
+  width: 100%;
 }
 
 .ing-meio {
   display: flex;
   align-items: center;
-  margin: 0 15px;
+  gap: 8px;
 }
 
 .ing-qtd {
-  width: 50px;
+  width: 55px;
   text-align: center;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 8px;
+  padding: 8px 5px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
 }
 
 .ing-unidade {
   color: #666;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.ing-acoes {
+  display: flex;
+  gap: 8px;
 }
 
 .ing-acoes button {
-  padding: 8px 15px;
+  padding: 8px 12px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
-  margin-left: 5px;
   color: white;
+  font-size: 0.9rem;
+  margin: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .btn-lista { background-color: #4caf50; }
 .btn-favorito { background-color: #e91e63; }
+
+/* Para telas maiores (Computador), voltamos à linha única! */
+@media (min-width: 600px) {
+  .ingredientes-titulo {
+    font-size: 2.2rem;
+    text-align: left;
+  }
+  .ingrediente-item {
+    flex-direction: row;
+    padding: 15px 20px;
+  }
+  .ing-nome {
+    width: auto;
+    flex: 1;
+    text-align: left;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .ing-controles {
+    width: auto;
+    justify-content: flex-end;
+    gap: 20px;
+  }
+}
