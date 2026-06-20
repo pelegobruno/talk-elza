@@ -1,6 +1,15 @@
 /* --- Importa fonte elegante para o título dos ingredientes (DEVE FICAR NA LINHA 1) --- */
 @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
 
+/* Trava absoluta para impedir o telemóvel de encolher o app sozinho (Correção do Bug) */
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  width: 100%;
+  height: 100%;
+}
+
 /* Reset Universal (Evita a barra de rolagem horizontal) */
 * {
   margin: 0;
@@ -13,6 +22,8 @@ body {
   color: #333;
   font-family: 'Georgia', 'Times New Roman', serif;
   overflow-x: hidden; /* BLOQUEIA rolagem lateral na tela inteira */
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Navegação Otimizada (Flexbox) */
