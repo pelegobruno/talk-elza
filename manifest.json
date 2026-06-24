@@ -1,16 +1,22 @@
 {
   "name": "Culinária Elza",
   "short_name": "ElzaTalk",
-  "description": "Aplicativo de receitas e utilidades da Elza",
   "start_url": "/talk-elza/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "background_color": "#fff8f0",
+  "theme_color": "#ff0084",
   "icons": [
     {
-      "src": "/talk-elza/vite.svg",
+      "src": "/talk-elza/talk-elza_192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml"
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/talk-elza/talk-elza_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
