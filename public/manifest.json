@@ -1,22 +1,22 @@
 {
   "name": "Culinária Elza",
   "short_name": "ElzaTalk",
-  "start_url": "./",
+  "start_url": "/talk-elza/",
   "display": "standalone",
   "background_color": "#fff8f0",
   "theme_color": "#ff0084",
   "icons": [
     {
-      "src": "talk-elza_192.png",
+      "src": "/talk-elza/talk-elza_192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "talk-elza_512.png",
+      "src": "/talk-elza/talk-elza_512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
