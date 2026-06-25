@@ -1,20 +1,21 @@
-const CACHE_NAME = 'elza-cache-v1';
+const CACHE_NAME = 'elza-cache-v2';
+
+// ⚡ Só podemos guardar ficheiros que REALMENTE existem na pasta public após o build
 const urlsToCache = [
-  '/talk-elza/',           // ⚡ Importante: seu repositório no GitHub Pages
+  '/talk-elza/',
   '/talk-elza/index.html',
-  '/talk-elza/manifest.webmanifest',
-  '/talk-elza/vite.svg',
-  '/talk-elza/src/main.jsx', // ✅ Arquivo principal Vite
-  '/talk-elza/assets/',     // ✅ Pega as imagens e css gerados na build
+  '/talk-elza/manifest.json',
+  '/talk-elza/talk-elza_192.png',
+  '/talk-elza/talk-elza_512.png'
 ];
 
-// Instalação: Caching dos arquivos
+// Instalação: Caching dos arquivos essenciais
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log('[Service Worker] Caching app shell');
       return cache.addAll(urlsToCache);
-    })
+    }).catch(err => console.error('[Service Worker] Erro no cache:', err))
   );
 });
 
@@ -34,7 +35,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: Servir o cache primeiro
+// Fetch: Servir o cache primeiro (Navegação Offline)
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
